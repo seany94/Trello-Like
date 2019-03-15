@@ -1,0 +1,35 @@
+{
+  "entrypoint": "index.html",
+  "shell": "src/my-app.js",
+  "sources": [
+  	"src/card.js"
+  ],
+  "extraDependencies": [
+    "node_modules/@webcomponents/webcomponentsjs/*.js",
+    "!node_modules/@webcomponents/webcomponentsjs/gulpfile.js",
+    "node_modules/@webcomponents/webcomponentsjs/bundles/*.js"
+  ],
+"builds": [
+    {
+      "name": "prod",
+      "preset": "es6-unbundled",
+      "js": {"minify": true},
+      "css": {"minify": true}
+    },
+    {
+      "name": "dev",
+      "js": {"minify": false, "compile": false},
+      "css": {"minify": false},
+      "html": {"minify": false},
+      "bundle": false,
+      "addPushManifest": false
+    }
+  ],
+  "moduleResolution": "node",
+  "npm": true,
+  "lint": {
+    "rules": [
+      "polymer-3"
+    ]
+  }
+}

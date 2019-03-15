@@ -2,7 +2,8 @@
   "entrypoint": "index.html",
   "shell": "src/my-app.js",
   "sources": [
-  	"src/card.js"
+  	"src/card.js",
+  	"materials/db.json"
   ],
   "extraDependencies": [
     "node_modules/@webcomponents/webcomponentsjs/*.js",

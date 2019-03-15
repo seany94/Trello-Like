@@ -39,31 +39,43 @@ export class Card extends PolymerElement {
       xhr.send();
     }
 
-    isSameId(data) {
+    id_check(columnId) {
+        var data = this.get('data')
         console.log(data)
-        return data.id == data.columnId;
+        console.log('project_check:');
+        console.log(columnId);
+        if(columnId === 1){
+            return true
+        }
+        else{
+            return false
+        }
+        //check if  projectID is accepted here.
+        //return true or false to render or not the template.
     }
 
-  static get template() {
-    return html`
+    static get template() {
+        return html`
 
-    <style>
-        .card { width: 500px; border-bottom: 5px solid teal;}
-    </style>
+            <style>
+                .card { width: 500px; border-bottom: 5px solid teal;}
+            </style>
 
-    <template is="dom-repeat" items="{{data.cards}}" filter="isSameId" observe="data.id">
-        <paper-card class="card" heading="{{item.title}}">
-          <div class="card-content">
-            {{item.description}}
-            Column ID: {{item.columnId}}
-          </div>
-          <div class="card-actions">
-            <paper-button>Edit</paper-button>
-            <paper-button>Delete</paper-button>
-          </div>
-        </paper-card>
-    </template>
-    `;
-  }
+            <template is="dom-repeat" items="{{data.cards}}">
+            <template is="dom-if" if="{{id_check(item.columnId)}}">
+                <paper-card class="card" heading="{{item.title}}">
+                  <div class="card-content">
+                    {{item.description}}
+                    Column ID: {{item.columnId}}
+                  </div>
+                  <div class="card-actions">
+                    <paper-button>Edit</paper-button>
+                    <paper-button>Delete</paper-button>
+                  </div>
+                </paper-card>
+            </template>
+            </template>
+        `;
+    }
 }
 customElements.define('card-element', Card);

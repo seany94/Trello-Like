@@ -36,23 +36,29 @@ class MyApp extends PolymerElement {
       xhr.send();
     }
 
+    checkId(id) {
+        console.log(id)
+        //check if  projectID is accepted here.
+        //return true or false to render or not the template.
+    }
+
     static get template() {
         return html`
 
             <style is="custom-style" include="iron-flex iron-flex-alignment"></style>
-                <style>
+            <style>
                 .col { width: 500px; }
                 .col-header { display: block; background-color: teal; border-style: inset; padding: 10px; text-align: center; font-size: 20px; color: white;}
             </style>
 
-                <div class="layout horizontal">
-                    <template is="dom-repeat" items="{{data.columns}}">
-                        <div class="col">
-                            <div class="col-header">{{item.title}}</div>
-                            <card-element></card-element>
-                        </div>
-                    </template>
-                </div>
+            <div class="layout horizontal">
+                <template is="dom-repeat" items="{{data.columns}}">
+                    <div class="col">
+                        <div class="col-header">{{item.title}}</div>
+                        <card-element selected="{{value}}"></card-element>
+                    </div>
+                </template>
+            </div>
         `;
     }
 }

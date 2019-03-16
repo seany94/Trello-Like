@@ -1,5 +1,7 @@
 # Trello-like Application - Front-End assignment
 
+### Port:- http://localhost:8080
+
 This page contains description and requirements for a Front-End assignment on [Web Components](https://developer.mozilla.org/en-US/docs/Web/Web_Components).
 
 ### Duration

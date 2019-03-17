@@ -5,6 +5,7 @@ Instructions
 git clone https://github.com/seany94/Trello-Like.git
 npm install
 npm start
+Do allow polymer to finish building before opening link
 Port:- http://localhost:8080
 ```
 

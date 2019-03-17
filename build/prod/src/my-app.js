@@ -21,21 +21,43 @@ class MyApp extends PolymerElement {
   }
 
   ready() {
-    super.ready();
+    super.ready(); // if(this.shadowRoot.querySelector('.col') != null){
+    //     console.log(this.shadowRoot.querySelectorAll('.col'))
+    //     var col = this.shadowRoot.querySelectorAll('.col')
+    //     for(let i = 0; i < col.length; i++){
+    //         col[i].removeChild(this.shadowRoot.querySelector('paper-card'));
+    //         console.log(col[i])
+    //     }
+    // }
+
     var that = this;
     this.shadowRoot.querySelector('#card-submit').addEventListener('click', function (event) {
       var cardInput = that.shadowRoot.querySelector('#cardForm').querySelectorAll('input');
-
-      for (let i = 0; i < cardInput.length; i++) {
-        console.log(cardInput[i].value);
-      }
+      axios.get('http://localhost:3000/cards').then(function (response) {
+        var cardsNum = JSON.parse(response.request.responseText);
+        axios.post('http://localhost:3000/cards', {
+          id: cardsNum.length + 1,
+          title: cardInput[0].value,
+          description: cardInput[1].value,
+          columnId: cardInput[2].value
+        }).then(function (response) {
+          // Finding a better way to update element but set and push not working
+          location.reload();
+        });
+      });
     });
     this.shadowRoot.querySelector('#col-submit').addEventListener('click', function (event) {
       var colInput = that.shadowRoot.querySelector('#colForm').querySelectorAll('input');
-
-      for (let i = 0; i < colInput.length; i++) {
-        console.log(colInput[i].value);
-      }
+      axios.get('http://localhost:3000/columns').then(function (response) {
+        var colsNum = JSON.parse(response.request.responseText);
+        axios.post('http://localhost:3000/columns', {
+          id: colsNum.length + 1,
+          title: colInput[0].value
+        }).then(function (response) {
+          // Finding a better way to update element but set and push not working
+          location.reload();
+        });
+      });
     });
     axios.get('http://localhost:3000/columns').then(function (response) {
       // handle success
@@ -73,7 +95,6 @@ class MyApp extends PolymerElement {
 
   static get template() {
     return html`
-
             <style is="custom-style" include="iron-flex iron-flex-alignment"></style>
             <style>
                 .col { width: 500px; }
@@ -146,7 +167,7 @@ class MyApp extends PolymerElement {
                                     <br>
                                     Card Title: <input type="text" title="title" placeholder="Input card title">
                                     Card Description: <input type="text" description="desc" placeholder="Input card description">
-                                    Column ID: <input type="text" columnid="coloumnid" placeholder="Input column id">
+                                    Column ID: <input type="number" columnid="coloumnid" placeholder="Input column id that exists currently else card will not appear" >
                                     <paper-button raised id="card-submit">Submit</paper-button>
                                 </form>
                             </iron-form>
@@ -158,17 +179,26 @@ class MyApp extends PolymerElement {
                 </template>
             </dom-bind>
 
-            <div class="layout horizontal center-center flex-stretch-align">
+            <div class="container layout horizontal flex-stretch-align">
                 <div class="flex-stretch-align">
                     <template is="dom-repeat" items="{{columns}}">
                         <div class="col" id="col-{{item.id}}">
-                            <div class="col-header">{{item.title}}</div>
+                            <div class="col-header">Title: {{item.title}} ID: {{item.id}} <paper-button raised disabled id="col-edit{{item.id}}">Edit</paper-button><paper-button raised on-click="deleteCol" id="{{item.id}}">Delete</paper-button></div>
                         </div>
                     </template>
                 </div>
             </div>
         `;
-  }
+  } // deleteCol(event) {
+  //     // console.log(event.target.getAttribute('id'), 'Ow!');
+  //     axios.delete(`http://localhost:3000/columns?id=${event.target.getAttribute('id')}`, {
+  //         data: { id: event.target.getAttribute('id') }
+  //       })
+  //       .then(response => {
+  //         location.reload();
+  //       });
+  // }
+
 
 }
 

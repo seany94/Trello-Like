@@ -18,6 +18,8 @@
   },
   "homepage": "https://github.com/seany94/Trello-Like#readme",
   "dependencies": {
+    "@polymer/iron-form": "^3.0.1",
+    "@polymer/iron-pages": "^3.0.1",
     "@polymer/paper-button": "^3.0.1",
     "@polymer/paper-card": "^3.0.1",
     "@polymer/polymer": "^3.1.0",

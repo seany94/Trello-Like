@@ -1,7 +1,10 @@
-import { PolymerElement, html } from "../node_modules/@polymer/polymer/polymer-element.js";
+import { PolymerElement } from "../node_modules/@polymer/polymer/polymer-element.js";
+import { html } from "../node_modules/@polymer/polymer/lib/utils/html-tag.js";
 import "../node_modules/@polymer/iron-flex-layout/iron-flex-layout-classes.js";
 import "../node_modules/@polymer/paper-card/paper-card.js";
-import "../node_modules/@polymer/paper-button/paper-button.js"; // import './card.js'
+import "../node_modules/@polymer/paper-button/paper-button.js";
+import "../node_modules/@polymer/iron-pages/iron-pages.js";
+import "../node_modules/@polymer/iron-form/iron-form.js";
 
 class MyApp extends PolymerElement {
   static get properties() {
@@ -20,6 +23,20 @@ class MyApp extends PolymerElement {
   ready() {
     super.ready();
     var that = this;
+    this.shadowRoot.querySelector('#card-submit').addEventListener('click', function (event) {
+      var cardInput = that.shadowRoot.querySelector('#cardForm').querySelectorAll('input');
+
+      for (let i = 0; i < cardInput.length; i++) {
+        console.log(cardInput[i].value);
+      }
+    });
+    this.shadowRoot.querySelector('#col-submit').addEventListener('click', function (event) {
+      var colInput = that.shadowRoot.querySelector('#colForm').querySelectorAll('input');
+
+      for (let i = 0; i < colInput.length; i++) {
+        console.log(colInput[i].value);
+      }
+    });
     axios.get('http://localhost:3000/columns').then(function (response) {
       // handle success
       that.set('columns', JSON.parse(response.request.responseText));
@@ -65,8 +82,81 @@ class MyApp extends PolymerElement {
                   @apply --layout-horizontal;
                   height: 120px;
                 }
+                input {
+                  width: 100%;
+                  box-sizing: border-box;
+                  font-size: 20px;
+                }
+                iron-form form input {
+                  margin: 10px 0;
+                }
+                iron-pages {
+                    width: 100%;
+                    height: 350px;
+                    font-size: 20px;
+                    color: white;
+                    text-align: center;
+                    border-style: outset;
+                    margin-bottom: 5px;
+                }
+                iron-pages div {
+                    width: 100%;
+                    height: 100%;
+                    display: flex;
+                    flex-direction: column;
+                    justify-content: center;
+                }
+                iron-pages div:nth-child(1) {
+                    background-color: teal;
+                }
+                iron-pages div:nth-child(2) {
+                    background-color: teal;
+                }
+                [page-name=fallback] {
+                  background-color: teal;
+                  font-size: 20px;
+                }
                 .card { width: 500px; border-bottom: 5px solid teal;}
             </style>
+
+            <dom-bind>
+                <template is="dom-bind">
+                    <input value="{{pageName::input}}" placeholder="Input 'card' or 'column'">
+                    <iron-pages selected="[[pageName]]" attr-for-selected="page-name" fallback-selection="fallback">
+                        <div page-name="column">
+                            <iron-form id="colForm">
+                              <form>
+                                Column Form
+                                <br>
+                                Please fill in the form below
+                                <br>
+                                <br>
+                                Column Title: <input type="text" title="title" placeholder="Input column title">
+                                <paper-button raised id="col-submit">Submit</paper-button>
+                              </form>
+                            </iron-form>
+                        </div>
+                        <div page-name="card">
+                            <iron-form id="cardForm">
+                                <form>
+                                    Card Form
+                                    <br>
+                                    Please fill in the form below
+                                    <br>
+                                    <br>
+                                    Card Title: <input type="text" title="title" placeholder="Input card title">
+                                    Card Description: <input type="text" description="desc" placeholder="Input card description">
+                                    Column ID: <input type="text" columnid="coloumnid" placeholder="Input column id">
+                                    <paper-button raised id="card-submit">Submit</paper-button>
+                                </form>
+                            </iron-form>
+                        </div>
+                        <div page-name="fallback">
+                            Fill in the input box above if you want to add card or column and the respective form will appear
+                        </div>
+                    </iron-pages>
+                </template>
+            </dom-bind>
 
             <div class="layout horizontal center-center flex-stretch-align">
                 <div class="flex-stretch-align">
@@ -83,52 +173,3 @@ class MyApp extends PolymerElement {
 }
 
 customElements.define('my-app', MyApp);
-
-class Card extends customElements.get('my-app') {
-  constructor() {
-    super();
-  }
-
-  static get properties() {
-    return {
-      cards: {
-        type: Object,
-        notify: true
-      }
-    };
-  }
-
-  ready() {
-    super.ready();
-    var that = this;
-    axios.get(`http://localhost:3000/cards`).then(function (response) {
-      // handle success
-      that.set('cards', JSON.parse(response.request.responseText));
-    });
-  }
-
-  static get template() {
-    return html`
-
-            <style>
-                .card { width: 500px; border-bottom: 5px solid teal;}
-            </style>
-
-            <template is="dom-repeat" items="{{cards}}">
-                <paper-card class="card" heading="{{item.title}}">
-                  <div class="card-content">
-                    {{item.description}}
-                    Column ID: {{item.columnId}}
-                  </div>
-                  <div class="card-actions">
-                    <paper-button>Edit</paper-button>
-                    <paper-button>Delete</paper-button>
-                  </div>
-                </paper-card>
-            </template>
-        `;
-  }
-
-}
-
-customElements.define('card-element', Card);
